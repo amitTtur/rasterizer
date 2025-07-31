@@ -5,29 +5,25 @@
 #include <SDL.h>
 #include <cstdint>
 
+#include <vector>
+
 #include "GeneralException.hpp"
+#include "defines.hpp"
 
 class SdlHandler {
 public:
-    SdlHandler(int width, int height); // private constructor
+    // once screen is set width and height are not changing
+    // note it can change if i decide to add this feature in the future
+    SdlHandler(usho width, usho height,std::vector<std::vector<Color>>& screenRef) :
+        _width(width), _height(height), _screenRef(screenRef) {};
+    ~SdlHandler() = default;
 
     void updateScreen();
-    uint32_t* getBuffer();
-    int getWidth() const;
-    int getHeight() const;
 
 private:
-   
-    ~SdlHandler();
-    SdlHandler(const SdlHandler&) = delete;
-    SdlHandler& operator=(const SdlHandler&) = delete;
-
-    int width;
-    int height;
-    SDL_Window* window = nullptr;
-    SDL_Renderer* renderer = nullptr;
-    SDL_Texture* texture = nullptr;
-    uint32_t* screenBuffer = nullptr;
+    const usho _width;
+    const usho _height;
+    std::vector<std::vector<Color>>& _screenRef;
 };
 
 #endif // SDL_SCREEN_HANDLER

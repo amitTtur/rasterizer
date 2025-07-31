@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="2dRenderer.cpp" />
     <ClCompile Include="2dRenderer.h" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
