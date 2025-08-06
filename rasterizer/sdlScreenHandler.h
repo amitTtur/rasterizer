@@ -17,6 +17,9 @@ public:
     SdlHandler(usho width, usho height, std::vector<std::vector<Color>>& screenRef);
     ~SdlHandler();
 
+    usho getWidth() const { return _width; }
+    usho getHeight() const { return _height; }
+
     void updateScreen();
 
 private:

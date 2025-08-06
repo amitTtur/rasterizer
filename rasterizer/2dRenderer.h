@@ -24,6 +24,8 @@ private:
 	SdlHandler _sdlHandler;
 	bool _listChanged;
 	std::vector<std::vector<Color>> _screen;
+
+	void proccessShapes();
 };
 
 
