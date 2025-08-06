@@ -14,13 +14,15 @@ class SdlHandler {
 public:
     // once screen is set width and height are not changing
     // note it can change if i decide to add this feature in the future
-    SdlHandler(usho width, usho height,std::vector<std::vector<Color>>& screenRef) :
-        _width(width), _height(height), _screenRef(screenRef) {};
-    ~SdlHandler() = default;
+    SdlHandler(usho width, usho height, std::vector<std::vector<Color>>& screenRef);
+    ~SdlHandler();
 
     void updateScreen();
 
 private:
+    SDL_Window* _window = nullptr;
+    SDL_Renderer* _renderer = nullptr;
+    //
     const usho _width;
     const usho _height;
     std::vector<std::vector<Color>>& _screenRef;

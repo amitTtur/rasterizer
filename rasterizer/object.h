@@ -5,9 +5,12 @@
 #include <vector>
 #include "point.h"
 
+
 class Object
 {
 public:
+	Object(Color color);
+
 	virtual std::vector<Point> getObjectPoints() const = 0;
 
 	Color getColor() const noexcept { return _color; }
@@ -20,9 +23,14 @@ public:
 	}
 	Color setColor(Color color) noexcept { _color = color; }
 
+	int getId() const { return _id; }
+
 protected:
 
 private:
+	static unsigned int count;
+
+	unsigned int _id;
 	Color _color;
 };
 

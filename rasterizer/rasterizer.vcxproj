@@ -139,6 +139,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="object.cpp" />
     <ClCompile Include="sdlScreenHandler.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Triangle.h" />

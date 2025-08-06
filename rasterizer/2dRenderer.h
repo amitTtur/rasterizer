@@ -18,7 +18,7 @@ public:
 	~D2_renderer() = default;
 
 	void addShape(std::unique_ptr<Object> toAdd);
-
+	
 private:
 	std::vector<std::unique_ptr<Object>> _renderList;
 	SdlHandler _sdlHandler;
