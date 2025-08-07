@@ -12,8 +12,8 @@ public:
 
 	usho getX() { return _x; }
 	usho getY() { return _y; }
-	usho setX(usho x) { _x = x; }
-	usho setY(usho y) { _y= y; }
+	void setX(usho x) { _x = x; }
+	void setY(usho y) { _y= y; }
 
 private:
 	usho _x; // in pixels

@@ -5,6 +5,10 @@
 #include <vector>
 #include "point.h"
 
+#define PI    3.14159265358979323846264338327950288
+#define to_radians(x) ((x) * (PI / 180.0))
+#define to_degrees(x) ((x) * (180.0 / PI))
+
 
 class Object
 {
@@ -25,6 +29,9 @@ public:
 
 	int getId() const { return _id; }
 
+	// calculate using cis
+	std::vector<Point> calculatePoints(Point start,uchar sides) const;
+
 protected:
 
 private:
@@ -32,6 +39,8 @@ private:
 
 	unsigned int _id;
 	Color _color;
+
+	Point getCordsFromCis(long double Radius, long double theta) const;
 };
 
 #endif

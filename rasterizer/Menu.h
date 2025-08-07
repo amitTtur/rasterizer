@@ -3,9 +3,14 @@
 #define MENU_H
 
 #define NUM_OF_FEATURES 1
+#define SDL_MAIN_HANDLED
+
+
+#include <windows.h>
 
 #include "Input.h"
 #include "2dRenderer.h"
+
 
 #define next << std::endl <<
 
@@ -27,8 +32,10 @@ private:
 	uchar getUserInput() const;
 
 	// inputs
-	Color getColorInput();
-	void getRectangleInput();
+	Color getColorInput() const;
+	Point getPointInput() const;
+
+	void getTriangleInput();
 
 	// screen width
 	ScreenRes _screenRes;

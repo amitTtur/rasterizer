@@ -2,16 +2,16 @@
 
 Menu::Menu()
 {
-	SDL_DisplayMode DM;
-	SDL_GetCurrentDisplayMode(0, &DM);
-	_fullW = DM.w;
-	_fullH = DM.h;
-	_bigW = _fullW * 0.75;
-	_bigH = _fullH * 0.75;
-	_medW = _fullW * 0.6;
-	_medH = _fullH * 0.6;
-	_smallW = _fullW * 0.35;
-	_smallH = _fullH * 0.35;
+	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+	_fullW = static_cast<usho>(screenWidth);
+	_fullH = static_cast<usho>(screenHeight);
+	_bigW = static_cast<usho>(_fullW * 0.75);
+	_bigH = static_cast<usho>(_fullH * 0.75);
+	_medW = static_cast<usho>(_fullW * 0.6);
+	_medH = static_cast<usho>(_fullH * 0.6);
+	_smallW = static_cast<usho>(_fullW * 0.35);
+	_smallH = static_cast<usho>(_fullH * 0.35);
 
 	std::cout << "Enter a screen resolution" next
 		"[0] Full screen (" << _fullW << "x" << _fullH << ")" next
@@ -32,21 +32,25 @@ Menu::Menu()
 				{
 					_screenRes = Full;
 					_renderer = std::make_unique<D2_renderer>(_fullW, _fullH);
+					break;
 				}
 				case 1:
 				{
 					_screenRes = Big;
 					_renderer = std::make_unique<D2_renderer>(_bigW, _bigH);
+					break;
 				}
 				case 2:
 				{
 					_screenRes = Medium;
 					_renderer = std::make_unique<D2_renderer>(_medW, _medH);
+					break;
 				}
 				case 3:
 				{
 					_screenRes = Small;
 					_renderer = std::make_unique<D2_renderer>(_smallW, _smallH);
+					break;
 				}
 				}
 				break;
@@ -64,7 +68,29 @@ Menu::Menu()
 
 void Menu::cycle()
 {
+	uchar option = 1;
+	std::cout << "Note: all shapes are their regular form " next
+		"All degrees and sides are the same sides" next
+		"The only shape that isn't regualr is the N'th sides shape" << std::endl;
+	while (option)
+	{
+		printMenu();
+		option = getUserInput();
 
+		switch (option)
+		{
+		case 0:
+		{
+			std::cout << "Goodbye!" << std::endl;
+			break;
+		}
+		case 1:
+		{
+			getTriangleInput();
+			break;
+		}
+		}
+	}
 }
 
 void Menu::printMenu() const
@@ -104,7 +130,7 @@ uchar Menu::getUserInput() const
 	}
 }
 
-Color Menu::getColorInput()
+Color Menu::getColorInput() const
 {
 	Color ret;
 	std::cout << "Enter the color for the shape, the input would be in a RGBA format."
@@ -142,8 +168,54 @@ Color Menu::getColorInput()
 	return ret;
 }
 
-void Menu::getRectangleInput()
+Point Menu::getPointInput() const
 {
-	Point p1, p2, p3;
-	 
+	Point ret;
+	std::cout << "Enter the coordinatees for the shape, the input would be in a (X,Y) format." next
+		"The value range is from 0 to 65535." next
+		"Entering 00 means the shape would be on the left (or top)" next
+		"Entering FF means the shape would be on the right (or bottom)" << std::endl;
+
+
+	std::string inp;
+	size_t calInp;
+	bool f = false;
+	startOfLoop:
+	do
+	{
+		std::cout << "Enter " << (f ? "Y" : "X") << " value: ";
+		std::cin >> inp;
+		try {
+			calInp = std::stoi(inp.c_str(), 0, 10);
+
+			if (calInp > 65535) {
+				std::cout << "Invalid input... The input value is higher then requested.";
+			}
+			else break;
+		}
+		catch (...)
+		{
+			std::cout << "Invalid input... Please enter in a hexadecimal format.";
+		}
+		checkInputBuffer();
+	} while (true);
+	if (!f)
+	{
+		ret.setX(calInp);
+		f = true;
+		goto startOfLoop;
+	}
+	else {
+		ret.setY(calInp);
+		return ret;
+	}
+}
+
+void Menu::getTriangleInput()
+{
+	// could be a one-liner
+	/*std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(getColorInput(), getPointInput());
+	std::unique_ptr<Object> obj = std::make_unique<Object>(triangle);
+	_renderer->addShape(std::move(obj));*/
+
 }

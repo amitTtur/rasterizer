@@ -13,7 +13,7 @@
 class D2_renderer
 {
 public:
-	D2_renderer(const int screenWidth, const int screenHeight);
+	D2_renderer(usho screenWidth, usho screenHeight);
 	~D2_renderer() = default;
 
 	void addShape(std::unique_ptr<Object> toAdd);
@@ -24,7 +24,7 @@ private:
 	bool _listChanged;
 	std::vector<std::vector<Color>> _screen;
 
-	void proccessShapes();
+	void proccessShapes();	
 };
 
 

@@ -1,6 +1,6 @@
 #include "2dRenderer.h"
 
-D2_renderer::D2_renderer(const int screenWidth, const int screenHeight) :
+D2_renderer::D2_renderer(usho screenWidth, usho screenHeight) :
 	_sdlHandler(screenWidth,screenHeight,_screen) , _listChanged(false)
 {
 	_screen.resize(_sdlHandler.getHeight());

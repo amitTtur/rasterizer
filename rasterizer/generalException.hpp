@@ -11,7 +11,7 @@ enum {
 	// add more if needed
 
 	// raise error to get to error handler fast
-	CALLBACK = 0
+	CALL_BACK = 0
 };
 
 class GeneralException : public std::exception // basic exception class

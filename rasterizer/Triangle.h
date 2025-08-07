@@ -18,7 +18,7 @@ p2     p3
 */
 class Triangle : Object {
 public:
-	Triangle(Color color,Point p1, Point p2, Point p3) : Object(color), _p1(p1), _p2(p2), _p3(p3) {};
+	Triangle(Color color,Point p1);
 	Triangle() = delete;
 	~Triangle() = default;
 
