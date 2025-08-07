@@ -6,7 +6,6 @@
 #include <vector>
 #include <memory>
 #include "sdlScreenHandler.h"
-#include "Menu.h"
 
 // object includes
 #include "Triangle.h"

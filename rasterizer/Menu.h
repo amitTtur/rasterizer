@@ -5,17 +5,42 @@
 #define NUM_OF_FEATURES 1
 
 #include "Input.h"
-#include "defines.hpp"
+#include "2dRenderer.h"
 
 #define next << std::endl <<
 
+enum ScreenRes {
+	Full = 0,
+	Big = 1,
+	Medium = 2,
+	Small = 3
+};
+
 class Menu
 {
+public:
+	Menu();
+	void cycle();
 private:
+	std::unique_ptr<D2_renderer> _renderer;
 	void printMenu() const;
 	uchar getUserInput() const;
-	
-private:
+
+	// inputs
+	Color getColorInput();
+	void getRectangleInput();
+
+	// screen width
+	ScreenRes _screenRes;
+	usho _fullW;
+	usho _fullH;
+	usho _bigW;
+	usho _bigH;
+	usho _medW;
+	usho _medH;
+	usho _smallW;
+	usho _smallH;
+
 };
 
 #endif
