@@ -7,6 +7,7 @@
 
 
 #include <windows.h>
+#include <map>
 
 #include "Input.h"
 #include "2dRenderer.h"
@@ -21,6 +22,12 @@ enum ScreenRes {
 	Small = 3
 };
 
+typedef struct {
+	ScreenRes _screenRes;
+	// size, {width,height}
+	std::map<ScreenRes, std::pair<usho, usho>> _sizes;
+} ScreenSizes;
+
 class Menu
 {
 public:
@@ -33,21 +40,12 @@ private:
 
 	// inputs
 	Color getColorInput() const;
-	Point getPointInput() const;
+	Point getPointInput();
 
 	void getTriangleInput();
 
 	// screen width
-	ScreenRes _screenRes;
-	usho _fullW;
-	usho _fullH;
-	usho _bigW;
-	usho _bigH;
-	usho _medW;
-	usho _medH;
-	usho _smallW;
-	usho _smallH;
-
+	ScreenSizes _screenSizes;
 };
 
 #endif

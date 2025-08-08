@@ -4,20 +4,16 @@ Menu::Menu()
 {
 	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
 	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-	_fullW = static_cast<usho>(screenWidth);
-	_fullH = static_cast<usho>(screenHeight);
-	_bigW = static_cast<usho>(_fullW * 0.75);
-	_bigH = static_cast<usho>(_fullH * 0.75);
-	_medW = static_cast<usho>(_fullW * 0.6);
-	_medH = static_cast<usho>(_fullH * 0.6);
-	_smallW = static_cast<usho>(_fullW * 0.35);
-	_smallH = static_cast<usho>(_fullH * 0.35);
+	_screenSizes._sizes[ScreenRes::Full] = { static_cast<usho>(screenWidth),static_cast<usho>(screenHeight) };
+	_screenSizes._sizes[ScreenRes::Big] = { static_cast<usho>(screenWidth * 0.75),static_cast<usho>(screenHeight * 0.75) };
+	_screenSizes._sizes[ScreenRes::Medium] = { static_cast<usho>(screenWidth * 0.55),static_cast<usho>(screenHeight * 0.55) };
+	_screenSizes._sizes[ScreenRes::Small] = { static_cast<usho>(screenWidth * 0.35),static_cast<usho>(screenHeight * 0.35) };
 
 	std::cout << "Enter a screen resolution" next
-		"[0] Full screen (" << _fullW << "x" << _fullH << ")" next
-		"[1] Big screen (" << _bigW << "x" << _bigH << ")" next
-		"[2] Medium screen (" << _medW << "x" << _medH << ")" next
-		"[3] Small screen (" << _smallW << "x" << _smallH << ")" << std::endl;
+		"[0] Full screen (" << _screenSizes._sizes[ScreenRes::Full].first << "x" << _screenSizes._sizes[ScreenRes::Full].second << ")" next
+		"[1] Big screen (" << _screenSizes._sizes[ScreenRes::Big].first << "x" << _screenSizes._sizes[ScreenRes::Big].second << ")" next
+		"[2] Medium screen (" << _screenSizes._sizes[ScreenRes::Medium].first << "x" << _screenSizes._sizes[ScreenRes::Medium].second << ")" next
+		"[3] Small screen (" << _screenSizes._sizes[ScreenRes::Small].first << "x" << _screenSizes._sizes[ScreenRes::Small].second << ")" << std::endl;
 	std::string inp;
 	do {
 		std::cout << "Enter value: ";
@@ -30,26 +26,22 @@ Menu::Menu()
 				{
 				case 0:
 				{
-					_screenRes = Full;
-					_renderer = std::make_unique<D2_renderer>(_fullW, _fullH);
+					_screenSizes._screenRes = Full;
 					break;
 				}
 				case 1:
 				{
-					_screenRes = Big;
-					_renderer = std::make_unique<D2_renderer>(_bigW, _bigH);
+					_screenSizes._screenRes = Big;
 					break;
 				}
 				case 2:
 				{
-					_screenRes = Medium;
-					_renderer = std::make_unique<D2_renderer>(_medW, _medH);
+					_screenSizes._screenRes = Medium;
 					break;
 				}
 				case 3:
 				{
-					_screenRes = Small;
-					_renderer = std::make_unique<D2_renderer>(_smallW, _smallH);
+					_screenSizes._screenRes = Small;
 					break;
 				}
 				}
@@ -63,6 +55,8 @@ Menu::Menu()
 			std::cout << "Invalid input... Try again." << std::endl;
 		}
 	} while (true);
+	_renderer = std::make_unique<D2_renderer>(_screenSizes._sizes[_screenSizes._screenRes].first,
+		_screenSizes._sizes[_screenSizes._screenRes].second);
 	cycle();
 }
 
@@ -133,7 +127,7 @@ Color Menu::getColorInput() const
 {
 	Color ret;
 	std::cout << "Enter the color for the shape, the input would be in a RGBA format."
-		"Enter The value in Hexadecimal format (ex: #FF00EEFF)"
+		"Enter The value in Hexadecimal format (ex: #RRGGBBAA)"
 		"Entering 00 means the color would be dimmer (for alpha transparent)" next
 		"Entering FF means the color would be brighter (for alpha opaque)" << std::endl;
 	
@@ -144,34 +138,48 @@ Color Menu::getColorInput() const
 		std::cout << "Enter value: ";
 		std::cin >> inp;
 
-		if ((checkInputBuffer() || checkHex(inp)))
+		if (checkInputBuffer() && checkHex(inp))
 		{
-			std::cout << "Invalid input... Please enter in a hexadecimal format.";
-		}
-		calInp = std::stoi(inp.c_str(), 0, 16);
-		if (calInp > 4294967295) {
-			std::cout << "Invalid input... The input value is higher then requested.";
-		}
-		else break;	
+			if (!inp.empty()) {
+				if (inp[0] == '#') {
+					inp.erase(0, 1);
+				}
+				else if (inp.size() >= 2 && (inp[0] == '0') && (inp[1] == 'x' || inp[1] == 'X')) {
+					inp.erase(0, 2);
+				}
+			}
 
+			calInp = std::stoul(inp.c_str(), 0, 16);
+			if (calInp > 4294967295) {
+				std::cout << "Invalid input... The input value is higher then requested." << std::endl;
+			}
+			else break;
+		}
+		else { std::cout << "Invalid input... Please enter in a hexadecimal format." << std::endl; }	
 	} while (true);
 
+	ret.r = (calInp >> 24) & 0xFF;
+	ret.g = (calInp >> 16) & 0xFF;
+	ret.b = (calInp >> 8) & 0xFF;
 	ret.a = calInp & 0xFF;
-	ret.b = calInp & 0xFF00;
-	ret.g = calInp & 0xFF0000;
-	ret.r = calInp & 0xFF000000;
+
+	std::cout << "Red value selected is: " << std::to_string(ret.r) next
+		"Green value selected is: " << std::to_string(ret.g) next
+		"Blue value selected is: " << std::to_string(ret.b) next
+		"Alpha value selected is: " << std::to_string(ret.a) next "";
 
 	//
 	return ret;
 }
 
-Point Menu::getPointInput() const
+Point Menu::getPointInput()
 {
 	Point ret;
-	std::cout << "Enter the coordinatees for the shape, the input would be in a (X,Y) format." next
-		"The value range is from 0 to 65535." next
-		"Entering 00 means the shape would be on the left (or top)" next
-		"Entering FF means the shape would be on the right (or bottom)" << std::endl;
+	std::cout next "Enter the coordinatees for the shape, the input would be in a (X,Y) format." next
+		"The value range for the width is from 0 to " << _screenSizes._sizes[_screenSizes._screenRes].first << "." next
+		"The value range for the height is from 0 to " << _screenSizes._sizes[_screenSizes._screenRes].second << "." next
+		"Entering 0 means the shape would be on the left (or top)" next
+		"Entering  means the shape would be on the right (or bottom)" << std::endl;
 
 
 	std::string inp;
@@ -182,16 +190,16 @@ Point Menu::getPointInput() const
 	{
 		std::cout << "Enter " << (f ? "Y" : "X") << " value: ";
 		std::cin >> inp;
-		if ((checkInputBuffer() || checkInt(inp))){
+		if ((checkInputBuffer() && checkInt(inp))){
 			calInp = std::stoi(inp.c_str(), 0, 10);
 
-			if (calInp > 65535) {
+			if ((!f && ((calInp > _screenSizes._sizes[_screenSizes._screenRes].first) || (calInp < 0))) ||
+				(f && ((calInp > _screenSizes._sizes[_screenSizes._screenRes].second) || (calInp < 0)))) {
 				std::cout << "Invalid input... The input value is higher then requested.";
 			}
 			else break;
 		}
-		std::cout << "Invalid input... Please enter in a hexadecimal format.";
-		checkInputBuffer();
+		else { std::cout << "Invalid input... Try again." << std::endl; }
 	} while (true);
 	if (!f)
 	{

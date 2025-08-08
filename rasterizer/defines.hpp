@@ -9,10 +9,7 @@
 
 typedef struct
 {
-	uchar r;
-	uchar g;
-	uchar b;
-	uchar a;
+	uchar r,g,b,a;
 } Color;
 
 #endif
