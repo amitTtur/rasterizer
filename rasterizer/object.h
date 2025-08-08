@@ -14,6 +14,7 @@ class Object
 {
 public:
 	Object(Color color);
+	virtual ~Object() = default;
 
 	virtual std::vector<Point> getObjectPoints() const = 0;
 

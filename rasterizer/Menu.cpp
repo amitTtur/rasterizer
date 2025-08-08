@@ -74,7 +74,6 @@ void Menu::cycle()
 		"The only shape that isn't regualr is the N'th sides shape" << std::endl;
 	while (option)
 	{
-		printMenu();
 		option = getUserInput();
 
 		switch (option)
@@ -99,7 +98,7 @@ void Menu::printMenu() const
 		"Menu: " next
 		"[1] Create triangle instance." next 
 		"[0] Exit." next
-		std::endl;
+		"";
 
 }
 
@@ -108,17 +107,17 @@ uchar Menu::getUserInput() const
 	while (true)
 	{
 		printMenu();
-
+		std::cout << "Enter: ";
 		std::string inp;
 		std::cin >> inp;
-		if (checkInputBuffer() || checkInt(inp))
+		if (!(checkInputBuffer() && checkInt(inp)))
 		{
 			std::cout << "Invalid input... Try again." next std::endl;
 		}
 		else
 		{
 			uchar tmp = std::stoi(inp,0,10);
-			if (tmp > 0 && tmp <= NUM_OF_FEATURES)
+			if (tmp >= 0 && tmp <= NUM_OF_FEATURES)
 			{
 				return tmp;
 			}
@@ -144,19 +143,17 @@ Color Menu::getColorInput() const
 	{
 		std::cout << "Enter value: ";
 		std::cin >> inp;
-		try {
-			calInp = std::stoi(inp.c_str(), 0, 16);
 
-			if (calInp > 4294967295) {
-				std::cout << "Invalid input... The input value is higher then requested.";
-			}
-			else break;
-		}
-		catch (...)
-		{	
+		if ((checkInputBuffer() || checkHex(inp)))
+		{
 			std::cout << "Invalid input... Please enter in a hexadecimal format.";
 		}
-		checkInputBuffer();
+		calInp = std::stoi(inp.c_str(), 0, 16);
+		if (calInp > 4294967295) {
+			std::cout << "Invalid input... The input value is higher then requested.";
+		}
+		else break;	
+
 	} while (true);
 
 	ret.a = calInp & 0xFF;
@@ -185,7 +182,7 @@ Point Menu::getPointInput() const
 	{
 		std::cout << "Enter " << (f ? "Y" : "X") << " value: ";
 		std::cin >> inp;
-		try {
+		if ((checkInputBuffer() || checkInt(inp))){
 			calInp = std::stoi(inp.c_str(), 0, 10);
 
 			if (calInp > 65535) {
@@ -193,10 +190,7 @@ Point Menu::getPointInput() const
 			}
 			else break;
 		}
-		catch (...)
-		{
-			std::cout << "Invalid input... Please enter in a hexadecimal format.";
-		}
+		std::cout << "Invalid input... Please enter in a hexadecimal format.";
 		checkInputBuffer();
 	} while (true);
 	if (!f)
@@ -214,8 +208,6 @@ Point Menu::getPointInput() const
 void Menu::getTriangleInput()
 {
 	// could be a one-liner
-	/*std::unique_ptr<Triangle> triangle = std::make_unique<Triangle>(getColorInput(), getPointInput());
-	std::unique_ptr<Object> obj = std::make_unique<Object>(triangle);
-	_renderer->addShape(std::move(obj));*/
-
+	std::unique_ptr<Object> obj = std::make_unique<Triangle>(getColorInput(), getPointInput());
+	_renderer->addShape(std::move(obj));
 }

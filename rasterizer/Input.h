@@ -16,5 +16,7 @@ STATE_INPUT checkInputBuffer();
 // doesnt support parsing an input or scientific values as of now 
 STATE_INPUT checkInt(const std::string& inp);
 
+STATE_INPUT checkHex(const std::string& inp);
+
 
 #endif // !INPUT_H

@@ -16,11 +16,11 @@ p1
 p2     p3
 
 */
-class Triangle : Object {
+class Triangle : public Object {
 public:
 	Triangle(Color color,Point p1);
 	Triangle() = delete;
-	~Triangle() = default;
+	virtual ~Triangle() = default;
 
 	virtual std::vector<Point> getObjectPoints() const override;
 
